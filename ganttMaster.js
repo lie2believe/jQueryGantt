@@ -558,6 +558,62 @@ GanttMaster.prototype.loadTasks = function (tasks, selectedRow) {
 };
 
 
+// taskBar auto display on center
+GanttMaster.prototype.browserTaskBar = function (tsk) {
+  if (tsk && tsk instanceof Task) {
+    var id = tsk.id;
+    //找到taskBar
+    // console.log('select $('+"svg[taskid=\"" + id + "\"])")
+
+    var taskBar = $("svg[taskid=\"" + id + "\"]");
+    // var taskBarX = $(taskBar)[0].getBoundingClientRect().left;
+    // console.log('currentBar:'+ $(taskBar).length)
+    if (taskBar=='undefined' || $(taskBar).length<=0){
+
+      return;
+    }
+
+
+    var taskBarX = parseFloat($(taskBar)[0].getAttribute("x"));
+    var taskBarWidth = parseFloat($(taskBar)[0].getBoundingClientRect().width);
+    //获取svg最外层画布canvas
+    var canvas = $(taskBar).parent().parent().parent();
+    var canvasWidth = parseFloat($(canvas).width());
+    //获取滚动区域
+    var scroll = $(taskBar).parent().parent().parent().parent();
+    var scrollWidth = parseFloat($(scroll).width());
+
+    var oldScrollLeft = $(scroll).scrollLeft();
+    var sL = oldScrollLeft;
+    var sR = oldScrollLeft+scrollWidth;
+    var tL = taskBarX;
+    var tR = taskBarX+taskBarWidth;
+    if ( tL>=sL  && tL<=sR
+        || tR>=sL && tR <=sR
+        || tL<=sL && tR>=sR){
+      return;
+    }
+    //获取水平滚动条要移动的位置
+    var centerLeft = (taskBarX + taskBarWidth / 2.0);
+    var scrollLeft = (centerLeft - scrollWidth / 2.0);
+
+    // console.log("-------------------------------------------------------");
+    // console.log("task left:" + taskBarX);
+    // console.log("task width:" + taskBarWidth);
+    // console.log("canvas width:" + canvasWidth); //画布区域大小
+    // console.log("scroll width:" + scrollWidth); //滚动区域大小
+    // console.log("scroll left position(old):" + oldScrollLeft); //滚动区域滑块位置(旧)
+    // console.log("scroll left position(new):" + scrollLeft); //滚动区域滑块位置(新)
+    // console.log("-------------------------------------------------------");
+    if (Math.abs(oldScrollLeft - scrollLeft) >= 1.0) {
+      $(scroll).scrollLeft(scrollLeft); //设置滑块位置
+    } else {
+      return;
+    }
+
+  }
+};
+
 GanttMaster.prototype.getTask = function (taskId) {
   var ret;
   for (var i = 0; i < this.tasks.length; i++) {

@@ -249,11 +249,19 @@ Ganttalendar.prototype.drawTask = function (task) {
         $("body").off("click.focused").one("click.focused", function () {
           $(".ganttSVGBox .focused").removeClass("focused");
         })
+          if(self.master.taskClick){
+          self.master.taskClick( task ,e);
+        }
 
-      }).dblclick(function () {
-        if (self.master.permissions.canSeePopEdit)
-          self.master.editor.openFullEditor(task,false);
-      }).mouseenter(function () {
+      }).dblclick(function (e) {
+          if(self.master.taskDblClick){
+          self.master.taskDblClick( task ,e);
+        }
+          else {
+            if (self.master.permissions.canSeePopEdit)
+              self.master.editor.openFullEditor(task, false);
+          }
+      }).mouseenter(function (e) {
         //bring to top
         var el = $(this);
         if (!self.linkOnProgress) {
@@ -262,15 +270,33 @@ Ganttalendar.prototype.drawTask = function (task) {
         } else {
           el.addClass("linkOver");
         }
-      }).mouseleave(function () {
+        if(self.master.taskMouseEnter){
+          self.master.taskMouseEnter(task,e)
+        }
+      }).mouseleave(function (e) {
         var el = $(this);
         el.removeClass("linkOver").find("[class*=linkHandleSVG]").oneTime(500,"hideLink",function(){$(this).hide()});
 
+        if(self.master.taskMouseLeave){
+          self.master.taskMouseLeave(task,e)
+        }
       }).mouseup(function (e) {
         $(":focus").blur(); // in order to save grid field when moving task
-      }).mousedown(function () {
+
+        if(self.master.taskMouseUp){
+          self.master.taskMouseUp(task,e)
+        }
+      }).mousedown(function (e) {
         var task = self.master.getTask($(this).attr("taskid"));
         task.rowElement.click();
+
+        if(self.master.taskMouseDown){
+          self.master.taskMouseDown(task,e)
+        }
+      }).mousemove(function(e){
+        if(self.master.taskMouseMove){
+          self.master.taskMouseMove(task,e);
+        }
       }).dragExtedSVG($(self.svg.root()), {
         canResize:  this.master.permissions.canWrite || task.canWrite,
         canDrag:    !task.depends && (this.master.permissions.canWrite || task.canWrite),
@@ -858,6 +884,9 @@ Ganttalendar.prototype.synchHighlight = function () {
     // take care of collapsed rows
     var ganttHighLighterPosition=this.master.editor.element.find(".taskEditRow:visible").index(this.master.currentTask.rowElement);
     this.master.gantt.element.find(".ganttLinesSVG").removeClass("rowSelected").eq(ganttHighLighterPosition).addClass("rowSelected");
+    //TODO:(lie2believe) bar autoShow in view's center
+    this.master.browserTaskBar(this.master.currentTask);
+
   } else {
     $(".rowSelected").removeClass("rowSelected"); // todo non c'era
   }

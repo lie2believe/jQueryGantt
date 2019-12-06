@@ -11,8 +11,9 @@
   <link rel=stylesheet href="gantt.css" type="text/css">
   <link rel=stylesheet href="ganttPrint.css" type="text/css" media="print">
 
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <script src="http://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://libs.baidu.com/jqueryui/1.8.22/jquery-ui.min.js "></script>
 
   <script src="libs/jquery/jquery.livequery.1.1.1.min.js"></script>
   <script src="libs/jquery/jquery.timers.js"></script>
@@ -87,6 +88,24 @@ $(function() {
   ge.set100OnClose=true;
 
   ge.shrinkParent=true;
+
+    //TODO:(lie2believe) add task interview event
+  ge.taskClick=function(task,e){
+    console.log('taskClick:'+ task.id);
+  }
+  ge.taskDblClick = function(task,e){
+    console.log('taskDblClick:'+task.id);
+  }
+  ge.taskMouseEnter = function(task,e){
+    console.log("taskMouseEnter:"+task.id);
+  }
+  ge.taskMouseLeave = function(task ,e){
+    console.log("taskMouseLeave:"+task.id);
+  }
+  ge.taskMouseMove=function(task,e){
+    console.log("taskMouseMove:"+task.id+" x:"+e.pageX+" y:"+e.pageY);
+  }
+
 
   ge.init($("#workSpace"));
   loadI18n(); //overwrite with localized ones
