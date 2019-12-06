@@ -2,6 +2,13 @@ jQueryGantt
 ===========
 jQuery Gantt editor has been written by Roberto Bicchierai and Silvia Chelazzi
 
+[2019.12.7]
+ add show taskbar in view center when click task , add some methods ,like taskClick(task,e)...
+
+ [DEMO](https://lie2believe.github.io/jQueryGantt/gantt.html)   
+
+
+
 <img src="http://twproject.s3.amazonaws.com/resources/gantt_github2.jpg" alt="Twproject jQuery Gantt" border="0" />
 
 These are some key features:
